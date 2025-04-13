@@ -2,16 +2,21 @@ package Utilities;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
 
+import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.HashMap;
 
 public class BrowserInitialize {
-        public static WebDriver initBrowser(String platform, String browser,String os,String version) {
+        public static WebDriver initBrowser(String platform, String browser, String os, String version) {
             RemoteWebDriver driver = null;
 
             try {
@@ -38,40 +43,45 @@ public class BrowserInitialize {
 
                 else if (platform.equalsIgnoreCase("cloud")) {
 
-                    DesiredCapabilities caps = new DesiredCapabilities();
-
+                    HashMap<String, Object> ltOptions = new HashMap<String, Object>();
+                    ltOptions.put("username", ConfigReader.get("LT_USERNAME"));
+                    ltOptions.put("accessKey", ConfigReader.get("LT_ACCESS_KEY"));
+                    ltOptions.put("project", ConfigReader.get("AutomationName"));
+                    ltOptions.put("w3c", true);
+                    ltOptions.put("plugin", "java-testNG");
+                    ltOptions.put("name", version);
+                    ltOptions.put("build", ConfigReader.get("AutomationName"));
                     switch (browser.toLowerCase()) {
                         case "chrome":
-                            caps.setCapability("browserName", "chrome");
-                            caps.setCapability("version", "latest");
-                            caps.setCapability("build", ConfigReader.get("AutomationTitleName"));
-                            caps.setCapability("name", ConfigReader.get("AutomationName"));
-                            caps.setCapability("w3c", true);
-                            caps.setCapability("plugin", "java-testNG");
+                            ChromeOptions browserOptions = new ChromeOptions();
+                            browserOptions.setPlatformName(os);
+                            browserOptions.setBrowserVersion("latest");
+                            browserOptions.setCapability("LT:Options", ltOptions);
+                            driver = new RemoteWebDriver(new URL("https://hub.lambdatest.com/wd/hub"),browserOptions);
+
                             break;
 
                         case "firefox":
-                            caps.setCapability("browserName", "Firefox");
+                            FirefoxOptions fbrowserOptions = new FirefoxOptions();
+                            fbrowserOptions.setCapability("browserName", "Firefox");
+                            fbrowserOptions.setPlatformName("Windows 11");
+                            fbrowserOptions.setBrowserVersion("latest");
+                            driver = new RemoteWebDriver(new URL("https://hub.lambdatest.com/wd/hub"),fbrowserOptions);
+
                             break;
 
                         case "edge":
-                            caps.setCapability("browserName", "Edge");
+                            EdgeOptions ebrowserOptions = new EdgeOptions();
+                            ebrowserOptions.setCapability("browserName", "Edge");
+                            ebrowserOptions.setPlatformName("Windows 11");
+                            ebrowserOptions.setBrowserVersion("latest");
+                            driver = new RemoteWebDriver(new URL("https://hub.lambdatest.com/wd/hub"),ebrowserOptions);
+
                             break;
 
                         default:
                             throw new IllegalArgumentException("Unsupported browser for cloud: " + browser);
-                    }
-
-                    caps.setCapability("os", os);
-                    caps.setCapability("osVersion", version);
-
-                    // Sample BrowserStack credentials
-                    String username = ConfigReader.get("LT_USERNAME");
-                    String accessKey = ConfigReader.get("LT_ACCESS_KEY");
-
-                    driver =new RemoteWebDriver( new URL("https://"+username+":"+accessKey+"@hub.lambdatest.com/wd/hub"),caps);
-                    //driver = new RemoteWebDriver(remoteUrl, caps);https://rameshnn007:LT_o8l2e8EXBuAoLjmlHJS9y1emf2Bv96mygSCFEjmlS9TCOMi@hub.lambdatest.com/wd/hub
-                }
+                    }   }
 
             } catch (Exception e) {
                 Assert.fail(e.toString());

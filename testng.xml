@@ -7,7 +7,7 @@
   <test thread-count="2" name="Hackathon">
 
     <classes>
-      <class name="org.lambdatestHackathon.AppTest"/>
+      <class name="org.lambdatestHackathon.HackathonTest"/>
     </classes>
   </test> <!-- Test -->
 </suite> <!-- Suite -->

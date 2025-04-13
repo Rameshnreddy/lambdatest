@@ -3,6 +3,7 @@ package Utilities;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -57,11 +58,11 @@ public class DriverFactory {
         // Create a new ExtentTest for each thread
         ExtentTest test = extent.createTest(method.getName());
         threadLocalTest.set(test);
-        String platform = System.getProperty("platform","local");
+        String platform = System.getProperty("platform","cloud");
         String browser = System.getProperty("browser","chrome");
         String os = System.getProperty("os", "Windows");
-        String osVersion = System.getProperty("version", "11");
-        threadLocalDriver.set(initBrowser(platform,browser,os,osVersion));
+
+        threadLocalDriver.set(initBrowser(platform,browser,os,method.getName()));
         fixWithAIHelper = new FixWithAIPrompt();
     }
 
@@ -80,6 +81,10 @@ public class DriverFactory {
         } finally {
             // Always ensure driver is closed and thread-local variables are removed
             if (driver != null) {
+                String status = result.isSuccess() ? "passed" : "failed";
+                //String reason = result.getThrowable() != null ? result.getThrowable().getMessage() : "Test passed successfully";
+
+                ((JavascriptExecutor) driver).executeScript("lambda-status=" + status);
                 driver.quit();
             }
             threadLocalDriver.remove();

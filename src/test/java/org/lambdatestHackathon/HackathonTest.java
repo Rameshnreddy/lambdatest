@@ -19,22 +19,26 @@ public Object[][] getLoginData() {
     };
 }
     @Test(dataProvider = "loginScenario")
-    public void loginFunctionality(String username,String password){
+    public void validateLoginFunctionality(String username,String password){
+    getTest().info("validating the login scenario with username as "+username +" password as"+password);
         launchURL(ConfigReader.get(loginURL));
         LoginPage loginPage = new LoginPage();
         loginPage.loginUsingCredentials(username,password);
         Assert.assertTrue(new HomePage().isPageLoaded(),"Failed to login as Entered credentials are invalid");
-    }
+        getTest().pass("successfully validated the login scenario");
+}
 
     @Test
     public void validateJsAlerts(){
+    getTest().info("validating the JS alerts");
         launchURL(ConfigReader.get(alertURL));
         AlertsPage alertsPage = new AlertsPage();
         alertsPage.clickElement(alertsPage.jsAlert,"Js Alert");
-        Assert.assertEquals( "You successfully clicked an alert",alertsPage.validateAlerts(""));
+        Assert.assertEquals( clickedAlert,alertsPage.validateAlerts(""));
         alertsPage.clickElement(alertsPage.jsConfirm,"Js Alert");
-        Assert.assertEquals(  "You clicked: Ok",alertsPage.validateAlerts(""));
+        Assert.assertEquals(  okAlert,alertsPage.validateAlerts(""));
         alertsPage.clickElement(alertsPage.jsPrompt,"Js Alert");
-        Assert.assertEquals(  "You entered: test",alertsPage.validateAlerts("test"));
+        Assert.assertEquals(  promptAlert,alertsPage.validateAlerts("test"));
+        getTest().pass("Successfully validated the JS alerts");
     }
 }

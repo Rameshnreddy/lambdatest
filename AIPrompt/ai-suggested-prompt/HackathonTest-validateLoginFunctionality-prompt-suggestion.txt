@@ -1,5 +1,5 @@
 You are an expert in Selenium testing with Java. 
-Fix the error in the Selenium test "loginFunctionality". 
+Fix the error in the Selenium test "validateLoginFunctionality". 
 - Start response with a highlighted diff of fixed code snippet.
 - Strictly rely on the HTML structure of the page.
 - Avoid adding any new code.
