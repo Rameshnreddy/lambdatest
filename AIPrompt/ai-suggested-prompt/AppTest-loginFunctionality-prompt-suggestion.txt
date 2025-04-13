@@ -1,0 +1,57 @@
+You are an expert in Selenium testing with Java. 
+Fix the error in the Selenium test "loginFunctionality". 
+- Start response with a highlighted diff of fixed code snippet.
+- Strictly rely on the HTML structure of the page.
+- Avoid adding any new code.
+- Avoid adding comments to the code.
+- Avoid changing the test logic.
+- Try to use more robust selectors like CSS or XPath that match the page structure.
+- Add concise notes about applied changes at the end of your response.
+- If the test may be correct and there is a bug in the page, note it.
+
+java.lang.RuntimeException: org.openqa.selenium.NoSuchElementException: no such element: Unable to locate element: {"method":"xpath","selector":"//h2[normalize-space()="Secure Area"]"}
+
+Code snippet of the failing test:
+
+        launchURL(ConfigReader.get(loginURL));
+        LoginPage loginPage = new LoginPage();
+        loginPage.loginUsingCredentials(username,password);
+        Assert.assertTrue(new HomePage().isPageLoaded(),"Failed to login as Entered credentials are invalid");
+    }
+
+    @Test
+    public void validateJsAlerts(){
+
+
+HTML structure of the page:
+
+<body>
+  <div>
+    <div id="flash-messages">
+      <div id="flash">
+        <a: "×">
+  <div>
+    <a>
+      <img alt="Fork me on GitHub">
+    <div id="content">
+      <div>
+        <h2: "Login Page">
+        <h4>
+          <em: "tomsmith">
+          <em: "SuperSecretPassword!">
+        <form id="login" name="login">
+          <div>
+            <div>
+              <label: "Username">
+              <input id="username" name="username" type="text">
+          <div>
+            <div>
+              <label: "Password">
+              <input id="password" name="password" type="password">
+          <button type="submit">
+            <i: "Login">
+  <div id="page-footer">
+    <div>
+      <hr>
+      <div>
+        <a: "Elemental Selenium">
